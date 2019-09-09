@@ -1,0 +1,20 @@
+proc import datafile="filepath.XLSX" 
+out=mbi_ds dbms=XLSX replace; 
+getnames=yes; 
+run;
+
+
+proc export 
+  data=work.hic_mbi_map_ds
+  dbms=xlsx 
+  outfile="filepath.xlsx" 
+  replace;
+run;
+
+
+PROC EXPORT DATA=OUTDIR.MOR_OUT
+ OUTFILE= "&outpath.\&filepath\&filename..txt" 
+	            DBMS=DLM REPLACE;
+/*				DELIMITER=&txt_delimiter;*/
+			    DELIMITER='|';
+			RUN;

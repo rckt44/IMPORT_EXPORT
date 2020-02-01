@@ -1,0 +1,55 @@
+/*import excel file*/
+
+PROC IMPORT OUT=dcmpare.PAFHCUPDX
+        DATAFILE="&inpath.\filename.xlsx"    
+        DBMS=XLSX REPLACE;
+     	SHEET='LIST';
+/*		DELIMITER='|'*/
+		GETNAMES=YES;/*NO*/
+RUN;
+
+/*import csv file-wihth pipe delimited*/
+PROC IMPORT OUT=dcmpare.PAFHCUPDX_chron_dx
+        DATAFILE="&inpath.\filename.csv"    
+        DBMS=DLM REPLACE;
+		DELIMITER='|';
+		GETNAMES=YES;
+RUN;
+
+/*export pipe delimited txt file*/
+
+PROC EXPORT DATA=sashelp.class
+ 	OUTFILE= "&outpath.&filename..txt" 
+	DBMS=DLM REPLACE;
+/*	DELIMITER=&txt_delimiter;*/
+	DELIMITER='|';
+RUN;
+
+
+
+
+
+/*export xlsx*/
+ods listing close;
+ods excel file="&path.\test.xlsx" style=minimal
+options (embedded_titles="yes" sheet_name="class");
+
+/*options(sheet_interval="NONE" sheet_name="_ " );*/
+/*options(shet_interval="bygroup" supress_bylines="yes" 
+  sheet_label="country"
+  embedded_titles="yes"
+  embed_titles_once="yes");*/
+ 
+ proc print data=sashelp.class;
+ title "class";
+ run;
+
+ options (sheet_name="cars");
+ proc print data=sashelp.cars;
+ title "cars";
+ var origin;
+ run;
+
+/**/
+ ods excel close;
+ ods listing;

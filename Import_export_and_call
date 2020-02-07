@@ -1,0 +1,18 @@
+proc import	out=OUTDIR.Req_file
+			table="any_table_name"
+			dbms=accesscs replace;
+			database="&inpath.\anyfilename.mdb";
+run;
+data OUTDIR.Req_file;
+	set OUTDIR.Req_file;
+	rename REQ_ID=request_id;
+	label REQ_ID=request_id;
+run; 
+data OUTDIR.Out_Req; 
+    set OUTDIR.Req_file;
+    length DDE_Command $255.;
+    DDE_Command ='%group_extract(request_id='|| trim(left(request_id))||',gvf_form='|| trim(left(gvf_form))
+					||',group_type=' || trim(left(group_type)) ||',source=' || trim(left(source))||');'; 
+    file "&datapath.\giveanyfilenametocalllater.sas";
+	put DDE_Command;
+run; 
